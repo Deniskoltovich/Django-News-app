@@ -27,7 +27,10 @@ def publication_details_by_slug(request, pub_slug: str):
         return HttpResponseNotFound(('Publication does not exist'))
 
     context = {
-        
+        'title': publication.title,
+        'pub': publication,
     }
+    return render(request, 'publication_details.html', context=context)
     
+
 

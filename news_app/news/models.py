@@ -1,3 +1,5 @@
+from googletrans import Translator
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
@@ -11,14 +13,21 @@ class Publication(models.Model):
     content = models.TextField(blank=False)
     source_link = models.CharField(max_length=128, blank=False, default=None, unique=True)
     introduction = models.CharField(max_length=64, default=None, blank=True)
+    time_created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)
+    
+    class Meta:
+        ordering = ['-time_created']
+
     
     
     def save(self, *args, **kwargs):
+        """Custom save method with slug creation using google translator API and intoduction field filling"""
         if not self.slug:
-            self.slug = slugify(self.title)
+            title_translation = Translator().translate(self.title).text
+            self.slug = slugify(title_translation)
         
-        self.introduction = f'{self.content[:64]}...' if len(self.content) > 64 else f'{self.content}...'
+        self.introduction = f'{self.content[:61]}...' if len(self.content) > 61 else f'{self.content}...'
         
         super(Publication, self).save(*args, **kwargs)
 

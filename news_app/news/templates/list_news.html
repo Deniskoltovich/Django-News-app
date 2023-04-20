@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,20 +15,26 @@
 <div class="cols-1 row-cols-md-2 g-4">
 
 {% for publication in publications %}
-    <div class="col">        
-        <div class="card">
-
-            <div class="card-header">
-                <a href="{% url 'publication_by_slug' publication.slug %}" class="card-link"> 
-                    <h3 class="card-title"> {{ publication.title }} </h3>
-                </a>
-            </div>
-
-            <div class="card-body">
-                <h5 class="card-title">{{ publication.introduction }}</h5>
-            </div>
-
+{{publication.poster_file_name}}
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+       
+      <div class="col-md-4">
+        <img src="{% static 'posters/' %}{{publication.poster_file_name}}" class="img-fluid rounded-start" alt="...">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="{% url 'publication_by_slug' publication.slug %}" class="card-link"> 
+                {{ publication.title }}
+            </a>
+            </h5>
+          <p class="card-text">{{ publication.introduction }}</p>
+          
+        </div>
+      </div>
     </div>
+  </div>
 
 
 
