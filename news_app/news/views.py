@@ -25,10 +25,13 @@ def publication_details_by_slug(request, pub_slug: str):
         publication = Publication.objects.get(slug=pub_slug)
     except Publication.DoesNotExist:
         return HttpResponseNotFound(('Publication does not exist'))
+    
+    publication_files = PublicationFile.objects.filter(publication=publication)
 
     context = {
         'title': publication.title,
-        'pub': publication,
+        'publication': publication,
+        'publication_files': publication_files
     }
     return render(request, 'publication_details.html', context=context)
     
