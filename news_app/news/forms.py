@@ -5,7 +5,7 @@ from news.models import Publication, PublicationFile
 class NewsCreationForm(ModelForm):
     class Meta:
         model = Publication
-        exclude = ['creation_date', 'poster_file_name', 'accepted_by_admin', 'introduction', 'slug', 'author']
+        exclude = [ 'source_link', 'creation_date', 'poster_file_name', 'accepted_by_admin', 'introduction', 'slug', 'author']
 
     def __init__(self, *args, **kwargs):
         super(NewsCreationForm, self).__init__(*args, **kwargs)

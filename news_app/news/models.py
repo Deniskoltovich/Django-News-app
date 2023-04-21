@@ -4,14 +4,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
-
+#TODO поставить четкие границы блоков в publication_details
 
 class Publication(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, blank=True)
     title = models.CharField(max_length=128, blank=False, unique=True)
     poster_file_name = models.CharField(max_length=32, blank=False, unique=True)
     content = models.TextField(blank=False)
-    source_link = models.CharField(max_length=128, default=None)
+    source_link = models.CharField(max_length=128, default=None, null=True)
     introduction = models.CharField(max_length=64, default=None, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     accepted_by_admin = models.BooleanField(default=True) 
