@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
     'news',
     'django_celery_beat',
     'celery',
@@ -75,6 +76,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'news_app.wsgi.application'
 
+
+LOGIN_REDIRECT_URL = '/news/'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -133,3 +136,4 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

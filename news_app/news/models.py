@@ -11,9 +11,10 @@ class Publication(models.Model):
     title = models.CharField(max_length=128, blank=False, unique=True)
     poster_file_name = models.CharField(max_length=32, blank=False, unique=True)
     content = models.TextField(blank=False)
-    source_link = models.CharField(max_length=128, blank=False, default=None, unique=True)
+    source_link = models.CharField(max_length=128, default=None)
     introduction = models.CharField(max_length=64, default=None, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
+    accepted_by_admin = models.BooleanField(default=True) 
     slug = models.SlugField(unique=True, blank=True)
     
     class Meta:

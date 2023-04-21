@@ -28,13 +28,13 @@ def scrape_ria_publication(url: str):
         publication_content += text_block.text
     
     admin = User.objects.get(pk=1)
-
+    poster_file_name = publication_title_eng.replace('"','').replace("'", '').replace(' ', '_') + '.jpg'
     publication = Publication.objects.create(
         author = admin,
         title = pubication_title,
         content = publication_content,
         source_link = url,
-        poster_file_name = f'{publication_title_eng}.jpg'
+        poster_file_name = poster_file_name
     )
     return publication
     
