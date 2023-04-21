@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<div class="row">
+    <div class="col-4">
+      <div id="list-example" class="list-group position-fixed">
+        <a class="list-group-item list-group-item-action " href="#list-item-0">Предложить публикацию</a>
+        <a class="list-group-item list-group-item-action " href="#list-item-1">Предложенные публикации</a>
+        <a class="list-group-item list-group-item-action " href="#list-item-2">Принятые публикации</a>
+        <a class="list-group-item list-group-item-action " href="#list-item-3">Отклоненные публикации</a>
+      </div>
+    </div>
+    <div class="col-8">
+      <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+        
+
+        <h4 id="list-item-0">
+            <div>
+                <p></p>
+                <form action="{% url 'upload' %}" method="get">
+                    <button class="btn btn-primary" type="submit">Предложить публикацию</button>
+                </form>
+                <p></p>
+            </div>
+        </h4>
+        {%if not has_offered %}
+        <h4 id="list-item-1">Предложенных публикаций нет.</h4>
+        {% else %}
+        <h4 id="list-item-1">Предложенныe публикации</h4>
+        {%endif%}
+        <p>
+                {% for publication in offered_publications %}
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                        
+                        <div class="col-md-4">
+                            <img src="{% static 'posters/' %}{{publication.poster_file_name}}" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'publication_by_slug' publication.slug %}" class="card-link"> 
+                                    {{ publication.title }}
+                                </a>
+                                </h5>
+                            <p class="card-text">{{ publication.introduction }}</p>
+                            
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </p>
+
+
+
+        <h4 id="list-item-2">Принятые публикации</h4>
+        <p>
+            {% for publication in accepted_publications %}
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                        
+                        <div class="col-md-4">
+                            <img src="{% static 'posters/' %}{{publication.poster_file_name}}" class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'publication_by_slug' publication.slug %}" class="card-link"> 
+                                    {{ publication.title }}
+                                </a>
+                                </h5>
+                            <p class="card-text">{{ publication.introduction }}</p>
+                            
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </p>
+        <h4 id="list-item-3">Отклоненные публикации</h4>
+        <p>
+            {% for publication in declined_publications %}
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                
+                <div class="col-md-4">
+                    <img src="{% static 'posters/' %}{{publication.poster_file_name}}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'publication_by_slug' publication.slug %}" class="card-link"> 
+                            {{ publication.title }}
+                        </a>
+                        </h5>
+                    <p class="card-text">{{ publication.introduction }}</p>
+                    
+                    </div>
+                </div>
+                </div>
+            </div>
+        {% endfor %} 
+        </p>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

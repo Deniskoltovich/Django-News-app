@@ -31,9 +31,12 @@
                                                 {% endif %}
                     </ul>
                   </li>
+                  {% if user.is_authenticated %}
+
                   <li class="nav-item">
-                    <a class="nav-link" href="{%url 'upload' %}">Предложить новость</a>
+                    <a class="nav-link" href="{%url 'my_news' %}">Мои публикации</a>
                   </li>
+                {% endif %}
                 </ul>
               </div>
             </div>

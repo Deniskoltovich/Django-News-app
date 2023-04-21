@@ -11,7 +11,7 @@ from settings.base import BASE_DIR
 
 
 def list_publications(request):
-    publications = Publication.objects.filter(accepted_by_admin=True)
+    publications = Publication.objects.filter(status=Publication.Status.ACCEPTED)
     context = {
         'title': 'News',
         'publications': publications,
@@ -59,7 +59,7 @@ def upload(request):
             publication = news_form.save(commit=False)
             publication.author = request.user
             publication.poster_file_name = publication_title_eng + '.jpg'
-            publication.accepted_by_admin = False
+            publication.status = Publication.Status.REVIEWING
             publication.save()
             context = {
                 'title': publication.title,
@@ -74,5 +74,18 @@ def upload(request):
         'form': news_form
     }
     return render(request, 'offer_publication.html', context)
-        
+    
 
+@login_required        
+def my_news(request):
+    user_publications = Publication.objects.filter(author=request.user)
+    accepted_user_publications = user_publications.filter(status=Publication.Status.ACCEPTED)
+    declined_user_publications = user_publications.filter(status=Publication.Status.DECLINED)
+    
+    context = {
+        'offered_publications': user_publications,
+        'accepted_publications': accepted_user_publications,
+        'declined_publications': declined_user_publications,
+        'has_offered': user_publications.count() > 0,
+    }
+    return render(request, 'offer_menu.html', context)

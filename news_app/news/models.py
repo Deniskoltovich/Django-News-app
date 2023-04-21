@@ -7,6 +7,13 @@ from django.utils.text import slugify
 #TODO поставить четкие границы блоков в publication_details
 
 class Publication(models.Model):
+    
+    class Status(models.TextChoices):
+        ACCEPTED = 'Accepted'
+        DECLINED = 'Declined'
+        REVIEWING = 'Reviewing'
+        
+        
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, blank=True)
     title = models.CharField(max_length=128, blank=False, unique=True)
     poster_file_name = models.CharField(max_length=64, blank=False, unique=True)
@@ -14,7 +21,7 @@ class Publication(models.Model):
     source_link = models.CharField(max_length=128, default=None, null=True)
     introduction = models.CharField(max_length=64, default=None, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
-    accepted_by_admin = models.BooleanField(default=True) 
+    status = models.CharField(max_length=9, choices=Status.choices, default=Status.ACCEPTED) 
     slug = models.SlugField(unique=True, blank=True)
     
     class Meta:
