@@ -44,17 +44,12 @@ def publication_details_by_slug(request, pub_slug: str):
     
 
 @login_required()
-def offer_publication(request):
-    if request.method == 'POST':
-        pass
-    else: pass
-    
 def upload(request):
     if request.method == 'POST':
         news_form = NewsCreationForm(request.POST)
         if news_form.is_valid():
             publication_title_eng = Translator().translate(news_form.cleaned_data['title']).text
-            publication_title_eng = publication_title_eng.replace('"','').replace("'", '').replace(' ', '_')
+            publication_title_eng = publication_title_eng.replace('"','').replace("'", '').replace(' ', '_')[:60]
             posters_dir = os.path.join(BASE_DIR, f'news/static/posters/{publication_title_eng}')
             
             upload = request.FILES['poster_upload']
