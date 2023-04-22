@@ -20,11 +20,14 @@ class Publication(models.Model):
     source_link = models.CharField(max_length=128, default=None, null=True)
     introduction = models.CharField(max_length=64, default=None, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=9, choices=Status.choices, default=Status.ACCEPTED) 
+    status = models.CharField(max_length=9, choices=Status.choices, default=Status.ACCEPTED)
     slug = models.SlugField(unique=True, blank=True)
     
     class Meta:
         ordering = ['-time_created']
+        indexes = [
+            models.Index(fields=['title',]),
+        ]
 
     
     
@@ -46,6 +49,14 @@ class RejectedPublication(models.Model):
     reason_for_rejection = models.TextField(blank=False, null=False)
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['publication',]),
+        ]
+        
+    def __str__(self):
+        return self.reason_for_rejection
+
 
 class PublicationFile(models.Model):
     file_name = models.CharField(max_length=32, blank=False, unique=True)

@@ -28,7 +28,7 @@
                         <div class="col-md-8">
                             <div class="card-body">
                             <h5 class="card-title">
-                                <a href="{% url 'publication_by_slug' publication.slug %}" class="card-link"> 
+                                <a href="{% url 'review_publication' publication.id %}" class="card-link"> 
                                     {{ publication.title }}
                                 </a>
                                 </h5>
@@ -56,9 +56,7 @@
                         <div class="col-md-8">
                             <div class="card-body">
                             <h5 class="card-title">
-                                <a href="{% url 'publication_by_slug' publication.slug %}" class="card-link"> 
                                     {{ publication.title }}
-                                </a>
                                 </h5>
                             <p class="card-text">{{ publication.introduction }}</p>
                             
