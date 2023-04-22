@@ -7,7 +7,7 @@ import requests
 import urllib.request
 from googletrans import Translator
 
-from news.models import Publication
+from news.models import Publication, PublicationFile
 from news_app import celery_app
 from settings.base import BASE_DIR  
 
@@ -47,7 +47,7 @@ def scrape_ria_publication(url: str):
     
     publication_image_href = soup.find('div', {'class': 'article__header'}).find('img')['src']
     download_image(publication_image_href, 'images', poster_file_name)
-    
+    PublicationFile.objects.create(file_name=poster_file_name, publication=publication)
     return publication
     
 

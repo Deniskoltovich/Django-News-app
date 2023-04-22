@@ -4,13 +4,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 
-#TODO поставить четкие границы блоков в publication_details
 
 class Publication(models.Model):
     
     class Status(models.TextChoices):
         ACCEPTED = 'Accepted'
-        DECLINED = 'Declined'
+        REJECTED = 'Rejected'
         REVIEWING = 'Reviewing'
         
         
@@ -42,6 +41,10 @@ class Publication(models.Model):
     def __str__(self):
         return self.title
     
+    
+class RejectedPublication(models.Model):
+    reason_for_rejection = models.TextField(blank=False, null=False)
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
     
 
 class PublicationFile(models.Model):

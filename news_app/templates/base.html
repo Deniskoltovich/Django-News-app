@@ -32,10 +32,15 @@
                     </ul>
                   </li>
                   {% if user.is_authenticated %}
-
+                  {% if user.is_superuser%}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{%url 'list_publication_offers' %}">Предложения</a>
+                  </li>
+                  {% else %}
                   <li class="nav-item">
                     <a class="nav-link" href="{%url 'my_news' %}">Мои публикации</a>
                   </li>
+                  {% endif %}
                 {% endif %}
                 </ul>
               </div>

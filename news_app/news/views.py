@@ -80,12 +80,27 @@ def upload(request):
 def my_news(request):
     user_publications = Publication.objects.filter(author=request.user)
     accepted_user_publications = user_publications.filter(status=Publication.Status.ACCEPTED)
-    declined_user_publications = user_publications.filter(status=Publication.Status.DECLINED)
+    rejected_user_publications = user_publications.filter(status=Publication.Status.REJECTED)
     
     context = {
         'offered_publications': user_publications,
         'accepted_publications': accepted_user_publications,
-        'declined_publications': declined_user_publications,
-        'has_offered': user_publications.count() > 0,
+        'rejected_publications': rejected_user_publications,
+        'are_offers_exist': user_publications.count() > 0,
     }
     return render(request, 'offer_menu.html', context)
+
+@login_required
+def list_publication_offers(request):
+    pending_rewiew_publications = Publication.objects.filter(status=Publication.Status.REVIEWING)
+    rejected_publications = Publication.objects.filter(status=Publication.Status.REJECTED)
+    
+    context = {
+        'has_pending_review': pending_rewiew_publications.count() > 0,
+        'are_rejected_exist': rejected_publications.count() > 0,
+        'pending_rewiew_publications': pending_rewiew_publications,
+        'rejected_publications': rejected_publications
+    }
+    
+    return render(request, 'admin_menu.html', context)
+    

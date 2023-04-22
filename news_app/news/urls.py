@@ -4,12 +4,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-from news.views import list_publications, publication_details_by_id, publication_details_by_slug, upload, my_news
+from news.views import (list_publications, publication_details_by_id,
+                        publication_details_by_slug, upload, my_news,
+                        list_publication_offers)
 
 urlpatterns = [
     path('', list_publications, name='list_publications'),
     path('upload/', upload, name= 'upload'),
     path('my_news/', my_news, name = 'my_news'),
+    path('offers', list_publication_offers, name='list_publication_offers'),
     path('<int:pub_id>/', publication_details_by_id, name='publication_by_id'),
     path('<slug:pub_slug>/', publication_details_by_slug, name='publication_by_slug'),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
