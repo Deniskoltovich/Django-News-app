@@ -20,7 +20,11 @@
                 <ul class="navbar-nav">
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      {% if user.is_authenticated %} 
+                      {{user.username }}
+                      {% else %}
                       Account
+                      {% endif %}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark">
                         {% if user.is_authenticated %}
@@ -42,8 +46,32 @@
                   </li>
                   {% endif %}
                 {% endif %}
+
+                <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                  <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Фильтр
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="{% url 'list_publications' %}?source=ria">ria.ru</a></li>
+                        <li><a class="dropdown-item" href="{% url 'list_publications' %}?source=belta">belta.by</a></li>
+                        </ul>
+                    </li>
+                  </ul>
+                </div>
+                
                 </ul>
+                
+                
               </div>
+              <form class="d" role="search"
+                    method="GET"
+                    action="{% url 'list_publications' %}">
+                        <input type="text" name="search" placeholder="Часть названия или статьи">
+                        <input type="text" name="date" placeholder="Дата: YYYY-dd-mm">
+                    <button class="btn btn-outline-success" type="submit">Поиск</button>
+                   </form>
             </div>
         </nav>
         <div class="container-fluid">

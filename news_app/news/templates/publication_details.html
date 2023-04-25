@@ -14,35 +14,50 @@
 
 <body>
 
+  {% if publication_files %}
+      <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
 
-    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
-
-        <div class="carousel-indicators">   
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner" >
-          {% for image in publication_files %}
-          <div class="carousel-item active">
-            <img src="{% static 'images/' %}{{image.file_name}} " class="d-block width="100px" height="338" style="display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 600;"" alt="..." text-align="center">
-            <div class="carousel-caption d-none d-md-block">
-            </div>
+          <div class="carousel-indicators">   
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            {% for image in publication_files %}
+            {% if forloop.counter != 1 %}
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{forloop.counter0}}" aria-label="Slide {{forloop.counter1}}"></button>
+            {% endif %}
+            {% endfor %}
           </div>
-          {% endfor %}
+          <div class="carousel-inner" >
+
+            {% for image in publication_files %}
+              {% if forloop.counter == 1 %}
+                <div class="carousel-item active">
+              {% else %}
+                <div class="carousel-item">
+              {%endif%}
+              <img src="{% static 'images/' %}{{image.file_name}} " class="d-block width="100px" height="338" style="display: block;
+              margin-left: auto;
+              margin-right: auto;
+              width: 600;"" alt="..." text-align="center">
+              <div class="carousel-caption d-none d-md-block">
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev" height="338" style="display: block;
+          margin-left: 170px;
+          margin-right: auto;
+          width: 900;">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next" style="display: block;
+          margin-left: auto;
+          margin-right: 170px;
+          width: 900;">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
+      {% endif %}
 
       <div class="card mb-3 center" style="width: 600;;
       margin: auto;

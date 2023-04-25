@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from googletrans import Translator
 from django.db import transaction
@@ -6,17 +7,35 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
+from django.db.models import Q
 from news.models import Publication, PublicationFile, RejectedPublication
 from news.forms import NewsCreationForm
 from settings.base import BASE_DIR
 
 
 def list_publications(request):
+    
     publications = Publication.objects.filter(status=Publication.Status.ACCEPTED)
+    query_params = request.GET
+    if query_params:
+        date = query_params.get('date')
+        content_to_search = query_params.get('search')
+        source = query_params.get('source')
+        if date:
+            date = datetime.strptime(date, '%Y-%d-%m').date()
+            publications = Publication.objects.filter(time_created__date=date)
+        elif content_to_search:
+            publications = Publication.objects.filter(Q(title__contains=content_to_search) 
+                                                      | Q(content__contains=content_to_search))
+        elif source:
+            publications = Publication.objects.filter(source_link__contains=source)
+        
+        
     context = {
-        'title': 'News',
-        'publications': publications,
+            'title': 'News',
+            'publications': publications,
     }
+    
     return render(request, 'list_news.html', context=context)
     
     
@@ -36,7 +55,8 @@ def publication_details_by_slug(request, pub_slug: str):
         return HttpResponseNotFound(('Publication does not exist'))
     
     publication_files = PublicationFile.objects.filter(publication=publication)
-
+    
+    print(publication_files)
     context = {
         'title': publication.title,
         'publication': publication,

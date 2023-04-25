@@ -14,14 +14,14 @@ class Publication(models.Model):
         
         
     author = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=None, blank=True)
-    title = models.CharField(max_length=128, blank=False, unique=True)
+    title = models.CharField(max_length=255, blank=False, unique=True)
     poster_file_name = models.CharField(max_length=64, blank=False, unique=True)
-    content = models.TextField(blank=False)
-    source_link = models.CharField(max_length=128, default=None, null=True)
+    content = models.TextField(blank=False, max_length=5120)
+    source_link = models.CharField(max_length=255, default=None, null=True)
     introduction = models.CharField(max_length=64, default=None, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=9, choices=Status.choices, default=Status.ACCEPTED)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=255)
     
     class Meta:
         ordering = ['-time_created']
@@ -59,6 +59,6 @@ class RejectedPublication(models.Model):
 
 
 class PublicationFile(models.Model):
-    file_name = models.CharField(max_length=32, blank=False, unique=True)
+    file_name = models.CharField(max_length=70, blank=False, unique=True)
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
 
