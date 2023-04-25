@@ -10,12 +10,24 @@ from settings.base import BASE_DIR
 from news_app import celery_app
 
 
-def download_image(url: str, dir_name: str, file_name: str):
+def download_image(url: str, dir_name: str, file_name: str) -> None:
+    """
+    :param url: Image's url
+    :param dir_name: dir to save
+    :param file_name: new image's filename
+    :return: None
+    """
     img_path = os.path.join(BASE_DIR, f"news/static/{dir_name}/{file_name}")
     urllib.request.urlretrieve(url, img_path)
 
 
-def scrape_ria_publication(url: str):
+def scrape_ria_publication(url: str) -> tuple[Publication, PublicationFile] or tuple[None, None]:
+    """
+       Processes page creating Publication instance and it's main image
+       :param url: publication's url
+       :return: Tuple(<Publication object>, PublicationFile) or (None, None) in case if publication already exists
+    """
+
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -52,16 +64,20 @@ def scrape_ria_publication(url: str):
     )
 
     download_image(publication_image_href, 'images', f'{poster_file_name}.jpg')
-    
+
     return publication, PublicationFile(file_name=f'{poster_file_name}.jpg', publication=publication)
 
 
 @celery_app.task(bind=True)
-def scrape_news_from_ria_ru(request):
+def scrape_news_from_ria_ru(request) -> None:
+    """
+    Main scraping function that finds all publications on the https://ria.ru/world/ page
+    and calls scrape_ria_publication() for each publication
+    """
     response = requests.get('https://ria.ru/world/')
     soup = BeautifulSoup(response.text, 'html.parser')
     content_block = soup.find('div', {'class': 'list list-tags'})
-    
+
     publications_files = []
     for news_item in content_block.find_all('div', {'class': 'list-item'}):
         publication_href = news_item.find('div', {'class': 'list-item__content'}).find('a')['href']
@@ -78,4 +94,3 @@ def scrape_news_from_ria_ru(request):
         download_image(poster_href, 'posters', publication.poster_file_name)
 
     PublicationFile.objects.bulk_create(publications_files)
-

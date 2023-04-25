@@ -27,6 +27,10 @@ class Publication(models.Model):
         ordering = ['-time_created']
         indexes = [
             models.Index(fields=['title',]),
+            models.Index(fields=['content', ]),
+            models.Index(fields=['time_created', ]),
+            models.Index(fields=['source_link', ]),
+
         ]
 
     
@@ -46,6 +50,7 @@ class Publication(models.Model):
     
     
 class RejectedPublication(models.Model):
+    """ Model for User's Publications rejected by admin"""
     reason_for_rejection = models.TextField(blank=False, null=False)
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
     
@@ -59,6 +64,12 @@ class RejectedPublication(models.Model):
 
 
 class PublicationFile(models.Model):
+    """
+    Model for file associated with publication
+    """
     file_name = models.CharField(max_length=70, blank=False, unique=True)
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return  self.file_name
 

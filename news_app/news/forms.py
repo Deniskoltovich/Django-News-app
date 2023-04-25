@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from news.models import Publication
 
 class NewsCreationForm(ModelForm):
+    """ Form for creation Publication instance"""
     class Meta:
         model = Publication
         exclude = [ 'source_link', 'creation_date', 'poster_file_name', 'accepted_by_admin', 'introduction', 'slug', 'author', 'status']
