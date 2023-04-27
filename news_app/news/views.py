@@ -5,9 +5,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.storage import FileSystemStorage
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseNotFound, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
-from googletrans import Translator
 from news.forms import NewsCreationForm
 from news.models import Publication, PublicationFile, RejectedPublication
 from settings.base import BASE_DIR
@@ -62,7 +61,6 @@ def publication_details_by_slug(request, pub_slug: str) -> HttpResponse:
 
     publication_files = PublicationFile.objects.filter(publication=publication)
 
-    print(publication_files)
     context = {
         'title': publication.title,
         'publication': publication,
@@ -84,9 +82,8 @@ def offer_publication(request):
             for char in news_form.cleaned_data['title'][:60]:
                 if char == ' ':
                     poster_file_name += '_'
-                elif char.isalpha():
+                elif char.isalnum():
                     poster_file_name += char
-            poster_file_name += '.jpg'
 
             static_dir = os.path.join(BASE_DIR, 'news/static/')
 
@@ -132,11 +129,14 @@ def my_news(request):
     return render(request, 'offer_menu.html', context)
 
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
 def list_publication_offers(request):
     """
     ONLY for superuser. Render page with all publications offers created by users
     """
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
+
     pending_rewiew_publications = Publication.objects.filter(status=Publication.Status.REVIEWING)
     rejected_publications = Publication.objects.filter(status=Publication.Status.REJECTED)
 
@@ -166,9 +166,8 @@ def edit_rejected_publication(request, id):
             for char in form.cleaned_data['title'][:60]:
                 if char == ' ':
                     poster_file_name += '_'
-                elif char.isalpha():
+                elif char.isalnum():
                     poster_file_name += char
-            poster_file_name += '.jpg'
 
             static_dir = os.path.join(BASE_DIR, 'news/static/')
             PublicationFile.objects.filter(publication=publication).delete()
@@ -199,13 +198,16 @@ def edit_rejected_publication(request, id):
     return render(request, 'edit_publication.html', context)
 
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
 @transaction.atomic()
-def review_publication(request, id):
+def review_publication(request, id: int):
     """
     ONLY for superuser. Render the page with offered publication to review
     :param id: Publication id
     """
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
+
     publication_for_review = get_object_or_404(Publication, pk=id)
     publication_files = PublicationFile.objects.filter(publication=publication_for_review)
     if request.method == 'POST':
@@ -228,14 +230,17 @@ def review_publication(request, id):
         return render(request, 'review_page.html', context)
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def accept_publication(request, id):
+@login_required
+def accept_publication(request, id: int):
     """
     ONLY for superuser. Accept publication created by user
     :param id: Publication id
     """
-    publication = get_object_or_404(Publication, pk=id)
-    publication.status = Publication.Status.ACCEPTED
-    publication.save()
+    if request.user.is_superuser:
+        publication = get_object_or_404(Publication, pk=id)
+        publication.status = Publication.Status.ACCEPTED
+        publication.save()
 
-    return redirect('list_publication_offers')
+        return redirect('list_publication_offers')
+    
+    return HttpResponseForbidden()

@@ -70,7 +70,7 @@
         <form method="post">
                     {% csrf_token %}            
                     <label for="reason_for_rejection" class="form-label">Напишите причину отказа</label>
-                    <textarea class="form-control" id="reason_for_rejection" name ="reason_for_rejection" rows="3"></textarea>
+                    <textarea class="form-control" id="reason_for_rejection" name ="reason_for_rejection" rows="3" required></textarea>
                     <button class="btn btn-outline-danger my-4" type="submit">Отклонить</button>
         </form>
 
