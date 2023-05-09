@@ -133,5 +133,4 @@ def scrape_news_from_belta_by(request):
         publications_files.extend(publication_files)
         download_image(poster_href, 'posters', publication.poster_file_name)
 
-    print(publication_files)
     PublicationFile.objects.bulk_create(publications_files)
