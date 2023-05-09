@@ -11,8 +11,8 @@ then
     echo "PostgreSQL started"
 fi
 
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver 0.0.0.0:8000
+python news_app/manage.py makemigrations
+python news_app/manage.py migrate
+python news_app/manage.py runserver 0.0.0.0:8000
 
 exec "$@"

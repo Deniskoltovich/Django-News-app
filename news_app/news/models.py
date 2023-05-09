@@ -22,13 +22,7 @@ class Publication(models.Model):
 
     class Meta:
         ordering = ['-time_created']
-        indexes = [
-            models.Index(fields=['title', ]),
-            models.Index(fields=['content', ]),
-            models.Index(fields=['time_created', ]),
-            models.Index(fields=['source_link', ]),
 
-        ]
 
     def save(self, *args, **kwargs):
         """Custom save method with slug creation using google translator API and intoduction field filling"""
@@ -49,10 +43,6 @@ class RejectedPublication(models.Model):
     reason_for_rejection = models.TextField(blank=False, null=False)
     publication = models.ForeignKey(Publication, on_delete=models.CASCADE)
 
-    class Meta:
-        indexes = [
-            models.Index(fields=['publication', ]),
-        ]
 
     def __str__(self):
         return self.reason_for_rejection

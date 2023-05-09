@@ -1,7 +1,10 @@
-FROM python:3.10.6-alpine
+FROM python:3.10-slim
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 WORKDIR .
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+RUN apt-get update \
+    && apt-get install gcc libpq-dev python3-dev \
+    --no-install-recommends -y
 COPY requirements.txt .
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh

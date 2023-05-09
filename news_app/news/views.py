@@ -247,9 +247,21 @@ def accept_publication(request, id: int):
 
 @login_required()
 def delete_publication(request, pub_id: int):
+    """
+    ONLY for superuser. Delete publication and all linked files by ID.
+    """
     if request.user.is_superuser:
+        import glob
+        static_dir = os.path.join(BASE_DIR, 'news/static/')
+        
         publication = get_object_or_404(Publication, pk=pub_id)
         publication.delete()
+        
+        fss = FileSystemStorage()
+        fss.delete(f'{static_dir}/posters/{publication.poster_file_name}')
+        for image in glob.glob(f'{static_dir}/images/*{publication.poster_file_name}'):
+            fss.delete(image)
+            
         return redirect('list_publications')
         
     return HttpResponseForbidden()
