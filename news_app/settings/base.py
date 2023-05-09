@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'news',
     'django_celery_beat',
     'celery',
-    'rest_framework'
+    'rest_framework',
+    'drf_yasg',
+
 ]
 
 MIDDLEWARE = [

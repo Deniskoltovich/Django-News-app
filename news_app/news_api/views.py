@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters, decorators
+from rest_framework import viewsets, filters
+
 
 
 from news.models import Publication
