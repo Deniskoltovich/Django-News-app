@@ -104,7 +104,7 @@ def scrape_belta_publication(url: str) -> tuple[Publication, list[PublicationFil
     except AttributeError:
         pass
 
-    publication_files.append(scrape_images(content_body, poster_file_name, publication))
+    publication_files.extend(scrape_images(content_body, poster_file_name, publication))
 
     return publication, publication_files
 
@@ -133,4 +133,5 @@ def scrape_news_from_belta_by(request):
         publications_files.extend(publication_files)
         download_image(poster_href, 'posters', publication.poster_file_name)
 
+    print(publication_files)
     PublicationFile.objects.bulk_create(publications_files)

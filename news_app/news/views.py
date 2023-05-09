@@ -112,7 +112,7 @@ def offer_publication(request):
     return render(request, 'offer_publication.html', context)
 
 
-@login_required
+@login_required()
 def my_news(request):
     """ Render page with menu to manage publications offered by user """
     user_publications = Publication.objects.filter(author=request.user)
@@ -129,7 +129,7 @@ def my_news(request):
     return render(request, 'offer_menu.html', context)
 
 
-@login_required
+@login_required()
 def list_publication_offers(request):
     """
     ONLY for superuser. Render page with all publications offers created by users
@@ -149,7 +149,7 @@ def list_publication_offers(request):
     return render(request, 'admin_menu.html', context)
 
 
-@login_required
+@login_required()
 @transaction.atomic()
 def edit_rejected_publication(request, id):
     """
@@ -198,7 +198,7 @@ def edit_rejected_publication(request, id):
     return render(request, 'edit_publication.html', context)
 
 
-@login_required
+@login_required()
 @transaction.atomic()
 def review_publication(request, id: int):
     """
@@ -230,7 +230,7 @@ def review_publication(request, id: int):
         return render(request, 'review_page.html', context)
 
 
-@login_required
+@login_required()
 def accept_publication(request, id: int):
     """
     ONLY for superuser. Accept publication created by user
@@ -243,4 +243,13 @@ def accept_publication(request, id: int):
 
         return redirect('list_publication_offers')
     
+    return HttpResponseForbidden()
+
+@login_required()
+def delete_publication(request, pub_id: int):
+    if request.user.is_superuser:
+        publication = get_object_or_404(Publication, pk=pub_id)
+        publication.delete()
+        return redirect('list_publications')
+        
     return HttpResponseForbidden()

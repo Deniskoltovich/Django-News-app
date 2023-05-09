@@ -4,10 +4,12 @@ from django.urls import path
 from news.views import (list_publications, publication_details_by_id,
                         publication_details_by_slug, offer_publication, my_news,
                         list_publication_offers, review_publication,
-                        edit_rejected_publication, accept_publication)
+                        edit_rejected_publication, accept_publication,
+                        delete_publication)
 
 urlpatterns = [
     path('', list_publications, name='list_publications'),
+    path('delete/<int:pub_id>', delete_publication, name='delete_publication'),
     path('my_news/offer_publication/', offer_publication, name='offer_publication'),
     path('my_news/', my_news, name='my_news'),
     path('my_news/rejected/edit/<int:id>', edit_rejected_publication, name='edit_rejected_publication'),
