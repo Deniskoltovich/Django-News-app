@@ -16,6 +16,8 @@ class PublicationAdmin(admin.ModelAdmin):
     
     def delete_queryset(self, request: HttpRequest, queryset: QuerySet[Any]) -> None:
         fss = FileSystemStorage()
+        static_dir = os.path.join(BASE_DIR, 'news/static/')
+
         for publication in queryset:
             fss.delete(f'{static_dir}/posters/{publication.poster_file_name}')
             for image in glob.glob(f'{static_dir}/images/*{publication.poster_file_name}'):

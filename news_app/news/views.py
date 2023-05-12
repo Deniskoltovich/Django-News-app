@@ -60,7 +60,7 @@ def publication_details_by_slug(request, pub_slug: str) -> HttpResponse:
         return HttpResponseNotFound(('Publication does not exist'))
 
     publication_files = PublicationFile.objects.filter(publication=publication)
-
+    print(list(publication_files))
     context = {
         'title': publication.title,
         'publication': publication,

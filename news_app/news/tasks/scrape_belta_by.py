@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from news.models import Publication, PublicationFile
 from news.tasks.scrape_ria_ru import download_image
+from googletrans import Translator
+
 
 from news_app import celery_app
 
@@ -56,6 +58,7 @@ def scrape_belta_publication(url: str) -> tuple[Publication, list[PublicationFil
     :param url: publication's url
     :return: Tuple(<Publication object>, list[PublicationFile] )  or (None, None) in case if publication already exists
     """
+    
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -80,11 +83,12 @@ def scrape_belta_publication(url: str) -> tuple[Publication, list[PublicationFil
     admin = User.objects.get(pk=1)
 
     poster_file_name = ''
-    for char in publication_title[:60]:
+    for char in Translator().translate(publication_title).text[:60]:
         if char == ' ':
             poster_file_name += '_'
         elif char.isalpha():
             poster_file_name += char
+            
 
     publication = Publication.objects.create(
         author=admin,

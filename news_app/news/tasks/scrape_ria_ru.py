@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from news.models import Publication, PublicationFile
 from settings.base import BASE_DIR
+from googletrans import Translator
+
 
 from news_app import celery_app
 
@@ -19,6 +21,7 @@ def download_image(url: str, dir_name: str, file_name: str) -> None:
     """
     img_path = os.path.join(BASE_DIR, f"news/static/{dir_name}/{file_name}")
     urllib.request.urlretrieve(url, img_path)
+    print(os.path.abspath(img_path))
 
 
 def scrape_ria_publication(url: str) -> tuple[Publication, PublicationFile] or tuple[None, None]:
@@ -46,11 +49,13 @@ def scrape_ria_publication(url: str) -> tuple[Publication, PublicationFile] or t
 
     admin = User.objects.get(pk=1)
     poster_file_name = ''
-    for char in publication_title[:60]:
+    for char in Translator().translate(publication_title).text[:60]:
         if char == ' ':
             poster_file_name += '_'
         elif char.isalpha():
             poster_file_name += char
+            
+    
     try:
         publication_image_href = soup.find('div', {'class': 'article__header'}).find('img')['src']
     except (TypeError, AttributeError):

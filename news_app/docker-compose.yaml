@@ -7,7 +7,7 @@ services:
       dockerfile: ./Dockerfile
     image: 'news_web'
     volumes:
-      - .:/code
+      - ./news:/news
 
     ports:
       - '8000:8000'
@@ -28,7 +28,7 @@ services:
     image: 'news_web'
     command: celery -A news_app worker -l info
     volumes:
-      - ./news_app/:/usr/src/app/
+      - /home/denis/Django-News-app/news_app/news/static:/news/static/
     env_file:
       - ./.env
     depends_on:
@@ -41,7 +41,7 @@ services:
     image: 'news_web'
     command: celery -A news_app beat -l info
     volumes:
-      - ./news_app/:/usr/src/app/
+      - /home/denis/Django-News-app/news_app/news/static:/news/static/
     env_file:
       - ./.env
     depends_on:
@@ -53,7 +53,7 @@ services:
   db:
     image: postgres:13.9
     volumes:
-      - /news_app:/var/lib/postgresql/data_app
+      - .:/var/lib/postgresql/data_app
     env_file:
       - ./.env
     ports:
