@@ -46,7 +46,7 @@ class TstModels(TestCase):
                 poster_file_name='some_name2.jpg',  
             )
             
-    def test_unique_publication_poster_filename(self):
+    def test_unique_publication_title(self):
         with self.assertRaises(IntegrityError):
             event2 = Publication.objects.create(
                 author=self.user,
@@ -74,9 +74,6 @@ class TstModels(TestCase):
             )
             
     
-            
-    
-            
     
         
     
