@@ -130,4 +130,5 @@ dmypy.json
 
 .idea
 .vscode
+.env.prod
 .dump.rdb
