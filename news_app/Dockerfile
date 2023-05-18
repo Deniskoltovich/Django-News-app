@@ -1,7 +1,7 @@
 FROM python:3.10-slim
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
-WORKDIR .
+WORKDIR /home/denis/Django-News-app/news_app
 RUN apt-get update \
     && apt-get install gcc libpq-dev python3-dev \
     --no-install-recommends -y

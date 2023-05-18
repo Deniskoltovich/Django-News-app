@@ -20,10 +20,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SETTINGS_MODULE')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = int(os.environ.get("DEBUG", default=0))
+CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:1337',]
 
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django_filters',
     'accounts',
     'news',
+    'API',
     'django_celery_beat',
     'celery',
     'rest_framework',
@@ -124,13 +126,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'news/static/'
+# STATIC_URL = 'news/static/'
 
-STATICFILES_DIRS = [
-    "/news/static/",
-    os.path.join(BASE_DIR, "news/static/"),
+# STATICFILES_DIRS = [
+#     "/news/static/",
+#     os.path.join(BASE_DIR, "news/static/"),
 
-]
+# ]
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

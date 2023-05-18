@@ -6,8 +6,6 @@ services:
     build:
       dockerfile: ./Dockerfile
     image: 'news_web'
-    volumes:
-      - ./news:/news
 
     ports:
       - '8000:8000'

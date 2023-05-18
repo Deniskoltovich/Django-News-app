@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  web:
+    restart: unless-stopped
+    build:
+      dockerfile: ./Dockerfile.prod
+    image: 'news_web_prod'
+    command: gunicorn news_app.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - 8000
+    volumes:
+      - /home/denis/Django-News-app/news_app/news/staticfiles:/home/denis/Django-News-app/news_app/staticfiles/
+      - /home/denis/Django-News-app/news_app/news/staticfiles:/home/denis/Django-News-app/news_app/news/static/
+
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+  redis:
+    image: redis:alpine
+    command: redis-server --port 7777
+    ports:
+      - "7777:7777"
+
+  celery:
+    restart: unless-stopped
+    image: 'news_web_prod'
+    command: celery -A news_app worker -l info
+    volumes:
+      - /home/denis/Django-News-app/news_app/news/staticfiles:/home/denis/Django-News-app/news_app/news/static/
+    env_file:
+      - ./.env
+    depends_on:
+      - web
+      - redis
+      - db
+
+  celery-beat:
+    restart: unless-stopped
+    image: 'news_web_prod'
+    command: celery -A news_app beat -l info
+    volumes:
+      - /home/denis/Django-News-app/news_app/news/staticfiles:/news/static/
+    env_file:
+      - ./.env
+    depends_on:
+      - web
+      - redis
+      - db
+      - celery
+  db:
+    image: postgres:13.9
+    volumes:
+      - .:/var/lib/postgresql/data_app
+    env_file:
+      - ./.env
+  nginx:
+    build: 
+      dockerfile: ./nginx/Dockerfile
+    volumes:
+      - /home/denis/Django-News-app/news_app/news/staticfiles:/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
