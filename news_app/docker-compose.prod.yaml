@@ -4,14 +4,14 @@ services:
   web:
     restart: unless-stopped
     build:
-      dockerfile: ./Dockerfile.prod
+      dockerfile: ./Dockerfile
     image: 'news_web_prod'
     command: gunicorn news_app.wsgi:application --bind 0.0.0.0:8000
     expose:
       - 8000
     volumes:
-      - /home/denis/Django-News-app/news_app/news/staticfiles:/home/denis/Django-News-app/news_app/staticfiles/
-      - /home/denis/Django-News-app/news_app/news/staticfiles:/home/denis/Django-News-app/news_app/news/static/
+      - /home/denis/Django-News-app/staticfiles:/home/denis/Django-News-app/news_app/staticfiles/
+      - /home/denis/Django-News-app/staticfiles:/home/denis/Django-News-app/news_app/news/static/
 
     env_file:
       - ./.env.prod
@@ -28,7 +28,7 @@ services:
     image: 'news_web_prod'
     command: celery -A news_app worker -l info
     volumes:
-      - /home/denis/Django-News-app/news_app/news/staticfiles:/home/denis/Django-News-app/news_app/news/static/
+      - /home/denis/Django-News-app/staticfiles:/home/denis/Django-News-app/news_app/news/static/
     env_file:
       - ./.env
     depends_on:
@@ -41,7 +41,7 @@ services:
     image: 'news_web_prod'
     command: celery -A news_app beat -l info
     volumes:
-      - /home/denis/Django-News-app/news_app/news/staticfiles:/news/static/
+      - /home/denis/Django-News-app/staticfiles:/news/static/
     env_file:
       - ./.env
     depends_on:
@@ -59,7 +59,7 @@ services:
     build: 
       dockerfile: ./nginx/Dockerfile
     volumes:
-      - /home/denis/Django-News-app/news_app/news/staticfiles:/staticfiles
+      - /home/denis/Django-News-app/staticfiles:/staticfiles
     ports:
       - 1337:80
     depends_on:
