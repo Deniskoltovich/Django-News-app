@@ -1,5 +1,6 @@
 # Django-News-app
 News aggregator application
+
 The following were performed:
 
 -parsing web pages with beautiful soup 4;
