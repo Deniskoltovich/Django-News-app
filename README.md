@@ -1,4 +1,5 @@
 # Django-News-app
+News aggregator application
 The following were performed:
 
 -parsing web pages with beautiful soup 4;
@@ -13,5 +14,5 @@ The following were performed:
 With docker:
 
 ```
-docker-compose -f news/docker-compose.prod.yaml up --build  
+docker-compose -f news_app/docker-compose.prod.yaml up --build  
 ```
